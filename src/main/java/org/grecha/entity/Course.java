@@ -31,7 +31,7 @@ public class Course {
     @NonNull
     private int price;
     private Boolean internship;
-    private Date duration;
+    private int duration;
     private Boolean inspector;
     private Date start;
 
