@@ -1,7 +1,7 @@
 package org.grecha.service;
 
-import org.grecha.entity.Area;
 import lombok.AllArgsConstructor;
+import org.grecha.entity.Area;
 import org.grecha.repository.AreaRepository;
 import org.springframework.stereotype.Service;
 

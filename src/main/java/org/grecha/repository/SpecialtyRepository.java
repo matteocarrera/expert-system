@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface SpecialtyRepository extends JpaRepository<Specialty, Long> {
     List<Specialty> findAll();
+    Specialty findByName(String name);
 }

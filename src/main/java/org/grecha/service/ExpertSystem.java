@@ -1,20 +1,16 @@
 package org.grecha.service;
 
 import lombok.RequiredArgsConstructor;
-import org.grecha.entity.Area;
-import org.grecha.entity.Specialty;
 import org.grecha.questionBlocks.*;
 import org.springframework.stereotype.Component;
 
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 import java.util.Scanner;
 
 @Component
 @RequiredArgsConstructor
 public class ExpertSystem {
-    private final AreaService areaService;
     private final Scanner scanner = new Scanner(System.in);
     private PrintStream ps;
     private final QuestionBlock[] questionBlocks = {
@@ -27,8 +23,7 @@ public class ExpertSystem {
         initPrintStream();
 
         showMessage("Добро пожаловать в систему подбора онлайн курсов!");
-        showMessage("Пройдите небольшой тест и мы поможем Вам с выбором:");
-        showMessage("");
+        showMessage("Пройдите небольшой тест и мы поможем Вам с выбором:\n");
 
         for (QuestionBlock questionBlock : questionBlocks) {
             runQuestionBlock(questionBlock);
@@ -55,47 +50,23 @@ public class ExpertSystem {
                 break;
         }
 
+        showMessage("\nОтветьте на несколько вопросов по данному разделу:\n");
+
         for (Question question : questionBlock.getQuestions()) {
-            showMessage(question.getTitle() + "\n");
+            showMessage(question.getTitle());
             for (int i = 0; i < question.getAnswers().length; i++) {
                 showMessage((i + 1) + "\t" + question.getAnswers()[i]);
             }
             int answer = scanner.nextInt();
             if (answer == question.getIndexOfRightAnswer() + 1) {
                 score += 25;
-                showMessage(score.toString());
+                showMessage("Баллов за текущий блок вопросов: " + score.toString() + "/100");
             } else {
                 showMessage("Вы допустили ошибку!");
             }
+            showMessage("");
         }
         questionBlock.setFinalScore(score);
-    }
-
-    private Area getSelectedArea() {
-        List<Area> areas = areaService.getAllAreas();
-
-        for (int i = 0; i < areas.size(); i++) {
-            showMessage((i + 1) + "\t" + areas.get(i).getName() + "\n");
-        }
-
-        showMessage("Введите цифру направления: ");
-
-        int selectedAreaNumber = scanner.nextInt();
-        if (selectedAreaNumber - 1 >= areas.size()) {
-            showMessage("Ошибка! Такого направления не существует! \n");
-            System.exit(0);
-        }
-
-        return areas.get(selectedAreaNumber - 1);
-    }
-
-    private void showInfoAboutSpecialties(Area selectedArea) {
-        showMessage("Выберите специальность по выбранному Вами направлению: \n");
-
-        List<Specialty> selectedAreaSpecialties = selectedArea.getSpecialties();
-        for (int i = 0; i < selectedAreaSpecialties.size(); i++) {
-            showMessage((i + 1) + "\t" + selectedAreaSpecialties.get(i).getName() + "\n");
-        }
     }
 
     private void initPrintStream() {

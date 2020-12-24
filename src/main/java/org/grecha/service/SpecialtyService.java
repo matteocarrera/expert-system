@@ -1,6 +1,7 @@
 package org.grecha.service;
 
 import lombok.AllArgsConstructor;
+import org.grecha.entity.Specialty;
 import org.grecha.repository.SpecialtyRepository;
 import org.springframework.stereotype.Service;
 
@@ -8,4 +9,8 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class SpecialtyService {
     private final SpecialtyRepository specialtyRepository;
+
+    public Specialty getSpecialtyByName(String name) {
+        return specialtyRepository.findByName(name);
+    }
 }
