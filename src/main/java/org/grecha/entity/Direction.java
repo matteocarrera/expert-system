@@ -9,22 +9,19 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "areas")
+@Table(name = "directions")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Area {
+public class Direction {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NonNull
     private String name;
-    private String description;
 
-    @OneToMany(mappedBy = "area", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Specialty> specialties;
-
-    @OneToMany(mappedBy = "area", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Technology> technologies;
+    @OneToMany(mappedBy = "direction", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Course> courses;
 }

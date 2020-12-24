@@ -23,29 +23,28 @@ public class Course {
     private String title;
 
     @NonNull
-    private String text;
+    private String description;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "directions_id", nullable = false)
+    private Direction direction;
+
+    @NonNull
+    private int price;
+
+    @NonNull
+    private int duration;
 
     @NonNull
     private String level;
 
     @NonNull
-    private int price;
-    private Boolean internship;
-    private int duration;
-    private Boolean inspector;
-    private Date start;
+    private String courseLink;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "course_technology",
+            name = "course_feature",
             joinColumns = @JoinColumn(name = "courses_id"),
-            inverseJoinColumns = @JoinColumn(name = "technologies_id"))
-    private List<Technology> technologies;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "course_specialty",
-            joinColumns = @JoinColumn(name = "courses_id"),
-            inverseJoinColumns = @JoinColumn(name = "specialties_id"))
-    private List<Specialty> specialties;
+            inverseJoinColumns = @JoinColumn(name = "features_id"))
+    private List<Feature> features;
 }

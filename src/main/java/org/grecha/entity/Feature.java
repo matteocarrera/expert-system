@@ -9,26 +9,18 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "technologies")
+@Table(name = "features")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Technology {
+public class Feature {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NonNull
     private String name;
-    private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "areas_id")
-    private Area area;
-
-    @ManyToMany(mappedBy = "technologies", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "features", fetch = FetchType.EAGER)
     private List<Course> courses;
-
-    @ManyToMany(mappedBy = "technologies", fetch = FetchType.EAGER)
-    private List<Specialty> specialties;
 }
