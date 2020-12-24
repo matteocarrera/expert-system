@@ -3,6 +3,7 @@ package org.grecha.service;
 import lombok.RequiredArgsConstructor;
 import org.grecha.entity.Area;
 import org.grecha.entity.Specialty;
+import org.grecha.questionBlocks.*;
 import org.springframework.stereotype.Component;
 
 import java.io.PrintStream;
@@ -16,17 +17,58 @@ public class ExpertSystem {
     private final AreaService areaService;
     private final Scanner scanner = new Scanner(System.in);
     private PrintStream ps;
+    private final QuestionBlock[] questionBlocks = {
+            new SoftwareDevelopmentQuestions(),
+            new MobileAppsDevelopmentQuestions(),
+            new WebDevelopmentQuestions()
+    };
 
     public void start() {
         initPrintStream();
 
-        showMessage("Добро пожаловать в систему подбора онлайн курсов!\n");
-        showMessage("Выберите интересующее Вас направление:\n");
+        showMessage("Добро пожаловать в систему подбора онлайн курсов!");
+        showMessage("Пройдите небольшой тест и мы поможем Вам с выбором:");
+        showMessage("");
 
-        Area selectedArea = getSelectedArea();
-        showInfoAboutSpecialties(selectedArea);
-        //TODO("На данный момент получаем специальности по выбранному направлению, сделать дальше выбор того, что интересно человеку изучить и на основе этого выдавать курсы")
+        for (QuestionBlock questionBlock : questionBlocks) {
+            runQuestionBlock(questionBlock);
+        }
+
         System.exit(0);
+    }
+
+    private void runQuestionBlock(QuestionBlock questionBlock) {
+        Integer score = 0;
+        showMessage("Заинтересованы ли Вы в разделе \"" + questionBlock.getTitle() + "\"?\n1. Да\n2. Возможно\n3. Нет");
+        switch (scanner.nextInt()) {
+            case 1:
+                questionBlock.setInterestRate(InterestRate.HIGH);
+                break;
+            case 2:
+                questionBlock.setInterestRate(InterestRate.MIDDLE);
+                break;
+            case 3:
+                questionBlock.setInterestRate(InterestRate.LOW);
+                break;
+            default:
+                showMessage("Такого значения нет!");
+                break;
+        }
+
+        for (Question question : questionBlock.getQuestions()) {
+            showMessage(question.getTitle() + "\n");
+            for (int i = 0; i < question.getAnswers().length; i++) {
+                showMessage((i + 1) + "\t" + question.getAnswers()[i]);
+            }
+            int answer = scanner.nextInt();
+            if (answer == question.getIndexOfRightAnswer() + 1) {
+                score += 25;
+                showMessage(score.toString());
+            } else {
+                showMessage("Вы допустили ошибку!");
+            }
+        }
+        questionBlock.setFinalScore(score);
     }
 
     private Area getSelectedArea() {
@@ -65,6 +107,6 @@ public class ExpertSystem {
     }
 
     private void showMessage(String text) {
-        ps.print(text);
+        ps.print(text + "\n");
     }
 }
