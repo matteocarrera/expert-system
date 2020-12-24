@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public abstract class QuestionBlock {
     private String title;
-    private InterestRate interestRate;
+    private Double interestRate;
     private Question[] questions;
     private Integer finalScore;
 }
