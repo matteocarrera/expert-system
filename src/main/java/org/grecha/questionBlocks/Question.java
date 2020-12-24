@@ -8,5 +8,5 @@ import lombok.Getter;
 public class Question {
     private final String title;
     private final String[] answers;
-    private final int indexOfRightAnswer;
+    private final int rightAnswer;
 }

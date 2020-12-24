@@ -58,7 +58,7 @@ public class ExpertSystem {
                 showMessage((i + 1) + "\t" + question.getAnswers()[i]);
             }
             int answer = scanner.nextInt();
-            if (answer == question.getIndexOfRightAnswer() + 1) {
+            if (answer == question.getRightAnswer() + 1) {
                 score += 25;
                 showMessage("Баллов за текущий блок вопросов: " + score.toString() + "/100");
             } else {

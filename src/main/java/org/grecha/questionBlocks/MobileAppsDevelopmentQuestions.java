@@ -9,22 +9,45 @@ public class MobileAppsDevelopmentQuestions extends QuestionBlock {
                         "Android SDK",
                         "Android NDK",
                         "JDK"},
-                        0),
+                        1),
                 new Question("Ядро какой операционной системы использовалось в качестве базы для ОС Android?", new String[]{
                         "Windows",
                         "Android OS",
                         "Linux"},
-                        2),
+                        3),
                 new Question("В среде Intel XDK можно разрабатывать приложения для следующих платформ", new String[]{
                         "Android",
                         "Apple iOS",
                         "Оба варианта верны"},
-                        2),
+                        3),
                 new Question("Возможен ли перенос приложений iOS в среду HTML5:", new String[]{
                         "Нет, прямой перенос приложений невозможен",
                         "Да, используя средства Intel XDK",
                         "Да, только для iPhone, используя средства Intel XDK"},
-                        1)
+                        2),
+                new Question("\n" +
+                        "\n" +
+                        "Какое выражение Kotlin эквивалентно данному из Java?\n" +
+                        "int x = a ? b : c\n (фича - Kotlin)", new String[]{
+                        "val x = if (a) b else c",
+                        "val x = if (a) b : c",
+                        "val x = a ? b : c"},
+                        1),
+                new Question("Удобное средство обмена между двумя NFC-устройствами:", new String[]{
+                        "Wi-Fi Direct",
+                        "AndroidBeam",
+                        "Dalvik"},
+                        2),
+                new Question("Что не является условием компиляции в Swift? (фича - Swift)", new String[]{
+                        "#if os",
+                        "#if compiler",
+                        "#if platform"},
+                        3),
+                new Question("Какой из датчиков не используется для определения положения смартфона в пространстве?", new String[]{
+                        "акселерометр",
+                        "gps",
+                        "магнитометр"},
+                        2)
         });
     }
 }
