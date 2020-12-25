@@ -1,6 +1,9 @@
 package org.grecha.service;
 
 import lombok.RequiredArgsConstructor;
+import org.grecha.entity.Course;
+import org.grecha.entity.Direction;
+import org.grecha.entity.Feature;
 import org.grecha.questionBlocks.*;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +14,9 @@ import java.util.*;
 @Component
 @RequiredArgsConstructor
 public class ExpertSystem {
+    private final CourseService courseService;
+    private final DirectionService directionService;
+    private final FeatureService featureService;
     private final Scanner scanner = new Scanner(System.in);
     private PrintStream ps;
     private final QuestionBlock[] questionBlocks = {
@@ -32,12 +38,49 @@ public class ExpertSystem {
         }
 
         // Сортируем блоки вопросов по убыванию заинтересованности
-        QuestionBlock[] a = Arrays.stream(questionBlocks)
+        QuestionBlock[] sortedQuestionBlocks = Arrays.stream(questionBlocks)
                 .sorted((o1, o2) -> o2.getInterestRate().compareTo(o1.getInterestRate()))
                 .toArray(QuestionBlock[]::new);
 
+        // Каждой фиче задаем сложность в зависимости от ответов на тест
+        HashMap<Feature, String> featureAndLevelMap = new HashMap<>();
+        for (Map.Entry<String, Double> featureWeight : sortByValue(featureMap).entrySet()) {
+            Feature feature = featureService.getFeatureByName(featureWeight.getKey());
+            if (featureWeight.getValue() == 0) {
+                featureAndLevelMap.put(feature, "Легко");
+            } else if (featureWeight.getValue() > 0.1 && featureWeight.getValue() < 2) {
+                featureAndLevelMap.put(feature, "Средне");
+            } else {
+                featureAndLevelMap.put(feature, "Сложно");
+            }
+            //feature.getCourses().forEach(c -> showMessage(c.getTitle()));
+        }
+        //featureAndLevelMap.forEach((key, value) -> showMessage(key + ": " + value));
         // Вывод веса для каждой фичи
-        sortByValue(featureMap).forEach((key, value) -> showMessage(key + ": " + value));
+        //sortByValue(featureMap).forEach((key, value) -> showMessage(key + ": " + value));
+        HashSet<Course> finalCourses = new HashSet<>();
+
+        // Для каждого блока вопросов
+        for (QuestionBlock sortedQuestionBlock : sortedQuestionBlocks) {
+            // Если человек хоть как-то заинтересован в данном направлении
+            if (sortedQuestionBlock.getInterestRate() > 0.0) {
+                // Для каждой фичи и ее сложности смотрим курсы (в модели Feature есть List<Course>)
+                for (Map.Entry<Feature, String> feature : featureAndLevelMap.entrySet()) {
+                    if (feature.getKey() != null) {
+                        // Из каждой пары фичи и ее сложности достаем курсы и проходим по каждому курсу
+                        for (Course course : feature.getKey().getCourses()) {
+                            // Если у курса сложность такая, какая у текущей фичи, то добавляем в итоговый список
+                            if (course.getLevel().equals(feature.getValue())) {
+                                finalCourses.add(course);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        finalCourses.forEach(c -> showMessage(c.getTitle() + "\n" + c.getDescription() + "\n" + "Цена: " + c.getPrice() + "\n" + "Длительность (в часах): " + c.getDuration() + "\n"));
+
+
 
         showMessage("");
         System.exit(0);
@@ -114,7 +157,7 @@ public class ExpertSystem {
         List<Map.Entry<String, Double>> list = new LinkedList<>(hm.entrySet());
 
         list.sort(Map.Entry.comparingByValue());
-        Collections.reverse(list);
+        //Collections.reverse(list);
 
         HashMap<String, Double> temp = new LinkedHashMap<>();
         for (Map.Entry<String, Double> aa : list) {
