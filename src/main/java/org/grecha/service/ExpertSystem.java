@@ -26,10 +26,17 @@ public class ExpertSystem {
         showMessage("Добро пожаловать в систему подбора онлайн курсов!");
         showMessage("Пройдите небольшой тест и мы поможем Вам с выбором:\n");
 
+        // Выполняем блок вопросов по каждому направлению
         for (QuestionBlock questionBlock : questionBlocks) {
             runQuestionBlock(questionBlock);
         }
 
+        // Сортируем блоки вопросов по убыванию заинтересованности
+        QuestionBlock[] a = Arrays.stream(questionBlocks)
+                .sorted((o1, o2) -> o2.getInterestRate().compareTo(o1.getInterestRate()))
+                .toArray(QuestionBlock[]::new);
+
+        // Вывод веса для каждой фичи
         sortByValue(featureMap).forEach((key, value) -> showMessage(key + ": " + value));
 
         showMessage("");
@@ -63,20 +70,27 @@ public class ExpertSystem {
 
         for (Question question : block.getQuestions()) {
             showMessage(question.getTitle());
+
             for (int i = 0; i < question.getAnswers().length; i++) {
                 showMessage((i + 1) + "\t" + question.getAnswers()[i]);
             }
+
             int answer = scanner.nextInt();
+            String featureName = question.getFeatureName();
+            Double featureCount;
+
             if (answer == question.getRightAnswer()) {
-                String featureName = question.getFeatureName();
-                Double featureCount = featureMap.get(featureName) != null ?
+                featureCount = featureMap.get(featureName) != null ?
                         featureMap.get(featureName) + block.getInterestRate() : block.getInterestRate();
-                featureMap.put(featureName, featureCount);
                 score++;
                 showMessage("Баллов за текущий блок вопросов: " + score.toString() + "/8");
             } else {
+                featureCount = featureMap.get(featureName) != null && featureMap.get(featureName) != 0.0 ?
+                        featureMap.get(featureName) : 0.0;
                 showMessage("Вы допустили ошибку!");
             }
+
+            featureMap.put(featureName, featureCount);
             showMessage("");
         }
         block.setFinalScore(score);
@@ -94,6 +108,7 @@ public class ExpertSystem {
         ps.print(text + "\n");
     }
 
+    // Сортировка HashMap по убыванию ЗНАЧЕНИЯ, а не ключа
     public static HashMap<String, Double> sortByValue(HashMap<String, Double> hm)
     {
         List<Map.Entry<String, Double>> list = new LinkedList<>(hm.entrySet());
