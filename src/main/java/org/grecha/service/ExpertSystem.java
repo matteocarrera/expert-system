@@ -78,7 +78,9 @@ public class ExpertSystem {
                 }
             }
         }
-        finalCourses.forEach(c -> showMessage(c.getTitle() + "\n" + c.getDescription() + "\n" + "Цена: " + c.getPrice() + "\n" + "Длительность (в часах): " + c.getDuration() + "\n"));
+        finalCourses.forEach(c -> showMessage(c.getTitle() + "\n" + c.getDescription() + "\n" + "Цена: " +
+                c.getPrice() + "\n" + "Длительность (в часах): " + c.getDuration() + "\n" + "Ссылка на курс: " +
+                c.getCourseLink() + "\n"));
 
 
 
