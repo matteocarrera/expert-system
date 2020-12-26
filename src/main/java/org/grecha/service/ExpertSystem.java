@@ -2,20 +2,17 @@ package org.grecha.service;
 
 import lombok.RequiredArgsConstructor;
 import org.grecha.entity.Course;
-import org.grecha.entity.Direction;
 import org.grecha.entity.Feature;
 import org.grecha.questionBlocks.*;
 import org.springframework.stereotype.Component;
 
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Component
 @RequiredArgsConstructor
 public class ExpertSystem {
-    private final CourseService courseService;
-    private final DirectionService directionService;
     private final FeatureService featureService;
     private final Scanner scanner = new Scanner(System.in);
     private PrintStream ps;
@@ -53,9 +50,7 @@ public class ExpertSystem {
             } else {
                 featureAndLevelMap.put(feature, "Сложно");
             }
-            //feature.getCourses().forEach(c -> showMessage(c.getTitle()));
         }
-        //featureAndLevelMap.forEach((key, value) -> showMessage(key + ": " + value));
         // Вывод веса для каждой фичи
         //sortByValue(featureMap).forEach((key, value) -> showMessage(key + ": " + value));
         HashSet<Course> finalCourses = new HashSet<>();
@@ -81,7 +76,6 @@ public class ExpertSystem {
         finalCourses.forEach(c -> showMessage(c.getTitle() + "\n" + c.getDescription() + "\n" + "Цена: " +
                 c.getPrice() + "\n" + "Длительность (в часах): " + c.getDuration() + "\n" + "Ссылка на курс: " +
                 c.getCourseLink() + "\n"));
-
 
 
         showMessage("");
@@ -122,7 +116,7 @@ public class ExpertSystem {
 
             int answer = scanner.nextInt();
             String featureName = question.getFeatureName();
-            Double featureCount;
+            double featureCount;
 
             if (answer == question.getRightAnswer()) {
                 featureCount = featureMap.get(featureName) != null ?
@@ -142,11 +136,7 @@ public class ExpertSystem {
     }
 
     private void initPrintStream() {
-        try {
-            ps = new PrintStream(System.out, true, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        ps = new PrintStream(System.out, true, StandardCharsets.UTF_8);
     }
 
     private void showMessage(String text) {
@@ -154,8 +144,7 @@ public class ExpertSystem {
     }
 
     // Сортировка HashMap по убыванию ЗНАЧЕНИЯ, а не ключа
-    public static HashMap<String, Double> sortByValue(HashMap<String, Double> hm)
-    {
+    public static HashMap<String, Double> sortByValue(HashMap<String, Double> hm) {
         List<Map.Entry<String, Double>> list = new LinkedList<>(hm.entrySet());
 
         list.sort(Map.Entry.comparingByValue());
